@@ -58,3 +58,17 @@ if __name__ == '__main__':
             resize_image(input_directory, file, output_dir)
     except OSError:
         print("Error")
+
+
+# Creating arrays to hold reformatted names for images
+images = []
+sketches = []
+
+# Loop of the directory of images and sketches and format names.
+for images in os.listdir('C:/Users/Gavin Everett/Desktop/GavinsCGANFYP/resizedPhotos'):
+    
+
+
+
+
+
