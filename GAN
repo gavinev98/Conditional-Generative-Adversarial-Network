@@ -1,0 +1,60 @@
+import keras
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten, Activation, Input
+from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, Conv2DTranspose, concatenate, merge, ZeroPadding2D
+from keras.layers.normalization import BatchNormalization
+import keras.layers.advanced_activations
+from keras.models import Model
+import pandas as pd
+from keras.optimizers import Adam
+import matplotlib.pyplot as plt
+from keras.preprocessing import image
+import pandas as pd
+import numpy as np
+from scipy.misc import imresize
+import glob
+import os
+from PIL import Image
+from keras.applications.vgg16 import VGG16
+from keras.optimizers import RMSprop
+from keras.applications.vgg16 import preprocess_input
+
+
+def resize_image(input_directory, infile, outputdir='resizedPhotos', size=(128, 128)):
+    # infile[0] root of the file name
+    outfile = os.path.splitext(infile)[0] + '_resized'
+    extension = os.path.splitext(infile)[1]
+
+    try:
+        img = Image.open(input_directory + '/' + infile)
+
+        # Access tuple values 0 and 1, using lanczos filter higher quality.
+        img = img.resize((size[0], size[1]), Image.LANCZOS)
+        print(img)
+
+        new_file = outputdir + '/' + outfile + extension
+        img.save(new_file)
+    except IOError:
+        print("unable to resize image {}'".format(infile))
+
+
+if __name__ == '__main__':
+    # Output directory to hold resized photos.
+    output_dir = 'resizedPhotos'
+    # Get current working directory.
+    dir = os.getcwd()
+    # Input directory
+    input_directory = 'photo'
+    full_dir = dir + '/' + input_directory
+
+    print(full_dir)
+    # Check it path exists
+    if not os.path.exists(os.path.join(dir, output_dir)):
+        os.mkdir(output_dir)
+
+
+    try:
+        for file in os.listdir(full_dir):
+            resize_image(input_directory, file, output_dir)
+    except OSError:
+        print("Error")
