@@ -14,6 +14,7 @@ import numpy as np
 from scipy.misc import imresize
 import glob
 import os
+import cv2
 from PIL import Image
 from keras.applications.vgg16 import VGG16
 from keras.optimizers import RMSprop
@@ -38,7 +39,30 @@ def resize_image(input_directory, infile, outputdir='resizedPhotos', size=(128, 
         print("unable to resize image {}'".format(infile))
 
 
+def format_images():
+    path1 = "/Users/Gavin Everett/Desktop/GavinsCGANFYP/resizedPhotos"
+    path2 = "/Users/Gavin Everett/Desktop/GavinsCGANFYP/resizedSketches"
+    count = 1
+
+    for images in os.listdir(path1):
+        photo = cv2.imread('resizedPhotos/' + images)
+        cv2.imwrite("FullyFormatted/" + "Photo %d.jpg" % count, photo)
+        count = count + 1
+
+
+    for sketches in os.listdir(path2):
+        photo = cv2.imread('resizedSketches/' + sketches)
+        cv2.imwrite("FullyFormattedSketch/" + "Sketch %d.jpg" % count, photo)
+        count = count + 1
+
+
+# Main
+
 if __name__ == '__main__':
+
+    # Calling formattingfilenames function
+    format_images()
+
     # Output directory to hold resized photos.
     output_dir = 'resizedPhotos'
     # Get current working directory.
@@ -65,8 +89,11 @@ images = []
 sketches = []
 
 # Loop of the directory of images and sketches and format names.
-for images in os.listdir('C:/Users/Gavin Everett/Desktop/GavinsCGANFYP/resizedPhotos'):
-    
+
+
+
+
+
 
 
 
