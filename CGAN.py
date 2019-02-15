@@ -74,10 +74,18 @@ for sketches in glob.glob(sketches_path + '\\*'):
 
 def generator():
 
-        #Defining the shape of the images to be input into the generator network.
-          image_input=(128, 128, 3)
-          img_rows = 128, 128
-          img_cols = 128, 128
+        # Defining the shape of the images to be input into the generator network.
+        image_input=(128, 128, 3)
+        img_rows = 128, 128
+        img_cols = 128, 128
+
+        # Using input method to feed in the rows and columns.
+        # Each of the layers in the model will contain a conv layer, bias, and activation layer.
+        inputs = Input(img_rows, img_cols, 3)
+        convolution1 = Conv2D(32, (7, 7), strides=(1, 1), padding="same")(inputs)
+        convolution1 = BatchNormalization()(convolution1)
+        convolution1 = Activation("relu")(convolution1)
+
 
         
 
