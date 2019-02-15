@@ -86,9 +86,13 @@ def generator():
         convolution1 = BatchNormalization()(convolution1)
         convolution1 = Activation("relu")(convolution1)
 
-
+        convolution2 = Conv2D(64, (3, 3), strides=(1, 1), padding="same")(convolution1)
+        convolution2 = BatchNormalization()(convolution2)
+        convolution2 = Activation("relu")(convolution2)
         
-
+        convolution3 = Conv2D(128, (3,3), strides=(2, 2), padding="same")(convolution2)
+        convolution3 = BatchNormalization()(convolution3)
+        convolution3 = Activation("relu")(convolution3)
 
 
 
