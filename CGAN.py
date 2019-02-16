@@ -94,6 +94,72 @@ def generator():
         convolution3 = BatchNormalization()(convolution3)
         convolution3 = Activation("relu")(convolution3)
 
+        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(convolution3)
+        test1 = BatchNormalization()(test1)
+        test1 = Activation("relu")(test1)
+        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
+        test2 = BatchNormalization()(test1)
+        test2 = Activation("relu")(test1)
+        # Merging layers together using keras function
+        merging1 = keras.layers.add([test1, test2])
+
+        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(merging1)
+        test1 = BatchNormalization()(test1)
+        test1 = Activation("relu")(test1)
+        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
+        test2 = BatchNormalization()(test1)
+        test2 = Activation("relu")(test1)
+        # Merging layers together using keras function
+        merging2 = keras.layers.add([test1, test2])
+
+        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(merging2)
+        test1 = BatchNormalization()(test1)
+        test1 = Activation("relu")(test1)
+        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
+        test2 = BatchNormalization()(test1)
+        test2 = Activation("relu")(test1)
+        # Merging layers together using keras function
+        merging3 = keras.layers.add([test1, test2])
+
+        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(merging3)
+        test1 = BatchNormalization()(test1)
+        test1 = Activation("relu")(test1)
+        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
+        test2 = BatchNormalization()(test1)
+        test2 = Activation("relu")(test1)
+        # Merging layers together using keras function
+        merging4 = keras.layers.add([test1, test2])
+
+        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(merging4)
+        test1 = BatchNormalization()(test1)
+        test1 = Activation("relu")(test1)
+        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
+        test2 = BatchNormalization()(test1)
+        test2 = Activation("relu")(test1)
+        # Merging layers together using keras function
+        merging5 = keras.layers.add([test1, test2])
+
+        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(merging5)
+        test1 = BatchNormalization()(test1)
+        test1 = Activation("relu")(test1)
+        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
+        test2 = BatchNormalization()(test1)
+        test2 = Activation("relu")(test1)
+        # Merging layers together using keras function
+        merging6 = keras.layers.add([test1, test2])
+
+        transpose1 = Conv2DTranspose(64, (3, 3), strides=(2, 2), padding="same")(merging6)
+        transpose1 = BatchNormalization()(transpose1)
+        transpose1 = Activation("relu")(transpose1)
+
+        transpose2 = Conv2DTranspose(64, (3, 3), strides=(2, 2), padding="same")(transpose1)
+        transpose2 = BatchNormalization()(transpose1)
+        transpose2 = Activation("relu")(transpose2)
+
+
+
+
+
 
 
 
