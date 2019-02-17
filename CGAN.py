@@ -3,7 +3,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Activation, Input
 from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, Conv2DTranspose, concatenate, merge, ZeroPadding2D
 from keras.layers.normalization import BatchNormalization
-import keras.layers.advanced_activations
+from keras.layers.advanced_activations import LeakyReLU, PReLU
 from keras.models import Model
 import pandas as pd
 from keras.optimizers import Adam
@@ -156,23 +156,34 @@ def generator():
         transpose2 = BatchNormalization()(transpose1)
         transpose2 = Activation("relu")(transpose2)
 
+        defineModel = Model(inputs=[inputs], outputs=[convolution3])
+
+        return defineModel
 
 
+def discriminator():
 
+    # Defining Steps for the disciminator,
+    image_input = (128, 128)
+    input = Input(image_input, 3)
 
+    convolution1 = Conv2D(64, (4, 4), strides=(2, 2))(input)
+    convolution1 = Activation(LeakyReLU(alpha=.2))(convolution1)
 
+    convolution2 = Conv2D(64, (4, 4), strides=(2, 2))(input)
+    convolution2 = BatchNormalization()(convolution1)
+    convolution2 = Activation(LeakyReLU(alpha=.2))(convolution1)
 
+    convolution3 = Conv2D(64, (4, 4), strides=(2, 2))(input)
+    convolution3 = BatchNormalization()(convolution1)
+    convolution3 = Activation(LeakyReLU(alpha=.2))(convolution1)
 
+    convolution4 = Conv2D(64, (4, 4), strides=(2, 2))(input)
+    convolution4 = BatchNormalization()(convolution1)
+    convolution4 = Activation(LeakyReLU(alpha=.2))(convolution1)
 
-
-
-
-
-
-
-
-
-
+    finalOutput = Flatten()(convolution4)
+    finalOutput = Dense(1, activation='sigmoid')(finalOutput)
 
 
 
