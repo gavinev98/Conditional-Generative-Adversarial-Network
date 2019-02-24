@@ -1,24 +1,14 @@
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Activation, Input
-from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, Conv2DTranspose, concatenate, merge, ZeroPadding2D
+from keras.layers import Conv2D, Conv2DTranspose
 from keras.layers.normalization import BatchNormalization
-from keras.layers.advanced_activations import LeakyReLU, PReLU
+from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Model
-import pandas as pd
-from keras.optimizers import Adam
-import matplotlib.pyplot as plt
 from keras.preprocessing import image
-import pandas as pd
 import numpy as np
-from scipy.misc import imresize
-import glob
 import os
-import cv2
 from PIL import Image
-from keras.applications.vgg16 import VGG16
-from keras.optimizers import RMSprop
-from keras.applications.vgg16 import preprocess_input
 import glob
 
 photo_path = "/Users/Gavin Everett/Desktop/GavinsCGANFYP/FullyFormattedPhotos"
@@ -74,96 +64,60 @@ for sketches in glob.glob(sketches_path + '\\*'):
 
 def generator():
 
-        # Defining the shape of the images to be input into the generator network.
-        image_input=(128, 128, 3)
-        img_rows = 128, 128
-        img_cols = 128, 128
+        # Inputs will be 128 rows , 128 cols, channels 3, as recommended.
+        inputs = Input((128, 128, 3))
+        # Layer 1
+        conv1 = Conv2D(32, (7, 7), strides=(1, 1), padding="same")(inputs)
+        conv1 = BatchNormalization()(conv1)
+        conv1 = Activation("relu")(conv1)
 
-        # Using input method to feed in the rows and columns.
-        # Each of the layers in the model will contain a conv layer, bias, and activation layer.
-        inputs = Input(img_rows, img_cols, 3)
-        convolution1 = Conv2D(32, (7, 7), strides=(1, 1), padding="same")(inputs)
-        convolution1 = BatchNormalization()(convolution1)
-        convolution1 = Activation("relu")(convolution1)
+        # Layer 2
+        conv2 = Conv2D(64, (3, 3), strides=(2, 2), padding="same")(conv1)
+        conv2 = BatchNormalization()(conv2)
+        conv2 = Activation("relu")(conv2)
 
-        convolution2 = Conv2D(64, (3, 3), strides=(1, 1), padding="same")(convolution1)
-        convolution2 = BatchNormalization()(convolution2)
-        convolution2 = Activation("relu")(convolution2)
-        
-        convolution3 = Conv2D(128, (3,3), strides=(2, 2), padding="same")(convolution2)
-        convolution3 = BatchNormalization()(convolution3)
-        convolution3 = Activation("relu")(convolution3)
+        # Layer 3
+        conv3 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(conv2)
+        conv3 = BatchNormalization()(conv3)
+        conv3 = Activation("relu")(conv3)
 
-        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(convolution3)
-        test1 = BatchNormalization()(test1)
-        test1 = Activation("relu")(test1)
-        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
-        test2 = BatchNormalization()(test1)
-        test2 = Activation("relu")(test1)
-        # Merging layers together using keras function
-        merging1 = keras.layers.add([test1, test2])
+        # Layer 4
+        conv4 = Conv2D(128, (3, 3), padding="same")(conv3)
+        conv4 = BatchNormalization()(conv4)
+        conv4 = Activation("relu")(conv4)
 
-        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(merging1)
-        test1 = BatchNormalization()(test1)
-        test1 = Activation("relu")(test1)
-        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
-        test2 = BatchNormalization()(test1)
-        test2 = Activation("relu")(test1)
-        # Merging layers together using keras function
-        merging2 = keras.layers.add([test1, test2])
+        # Layer 5
+        conv5 = Conv2D(128, (3, 3), padding="same")(conv4)
+        conv5 = BatchNormalization()(conv5)
+        conv5 = Activation("relu")(conv5)
 
-        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(merging2)
-        test1 = BatchNormalization()(test1)
-        test1 = Activation("relu")(test1)
-        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
-        test2 = BatchNormalization()(test1)
-        test2 = Activation("relu")(test1)
-        # Merging layers together using keras function
-        merging3 = keras.layers.add([test1, test2])
+        # Layer 6
+        conv6 = Conv2D(128, (3, 3), padding="same")(conv5)
+        conv6 = BatchNormalization()(conv6)
+        conv6 = Activation("relu")(conv6)
 
-        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(merging3)
-        test1 = BatchNormalization()(test1)
-        test1 = Activation("relu")(test1)
-        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
-        test2 = BatchNormalization()(test1)
-        test2 = Activation("relu")(test1)
-        # Merging layers together using keras function
-        merging4 = keras.layers.add([test1, test2])
-
-        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(merging4)
-        test1 = BatchNormalization()(test1)
-        test1 = Activation("relu")(test1)
-        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
-        test2 = BatchNormalization()(test1)
-        test2 = Activation("relu")(test1)
-        # Merging layers together using keras function
-        merging5 = keras.layers.add([test1, test2])
-
-        test1 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(merging5)
-        test1 = BatchNormalization()(test1)
-        test1 = Activation("relu")(test1)
-        test2 = Conv2D(128, (3, 3), strides=(2, 2), padding="same")(test1)
-        test2 = BatchNormalization()(test1)
-        test2 = Activation("relu")(test1)
-        # Merging layers together using keras function
-        merging6 = keras.layers.add([test1, test2])
-
-        transpose1 = Conv2DTranspose(64, (3, 3), strides=(2, 2), padding="same")(merging6)
+        # Transpose Layers
+        transpose1 = Conv2DTranspose(64, (3, 3), strides=(2, 2), padding="same")(conv6)
         transpose1 = BatchNormalization()(transpose1)
         transpose1 = Activation("relu")(transpose1)
 
-        transpose2 = Conv2DTranspose(64, (3, 3), strides=(2, 2), padding="same")(transpose1)
-        transpose2 = BatchNormalization()(transpose1)
+        # Transpose Layers
+        transpose2 = Conv2DTranspose(32, (3, 3), strides=(2, 2), padding="same")(transpose1)
+        transpose2 = BatchNormalization()(transpose2)
         transpose2 = Activation("relu")(transpose2)
 
-        defineModel = Model(inputs=[inputs], outputs=[convolution3])
+        # Layer 7
+        conv7 = Conv2D(3, (3, 3), strides=(1, 1), padding="same")(transpose2)
+        conv7 = BatchNormalization()(conv7)
+        conv7 = Activation("relu")(conv7)
 
-        return defineModel
+        model = Model(inputs=[inputs], outputs=[conv7])
+        return model
 
 
 def discriminator():
 
-    # Defining Steps for the disciminator,
+    # Discriminator to also take same input structure.
     image_input = (128, 128)
     input = Input(image_input, 3)
 
@@ -171,8 +125,7 @@ def discriminator():
     convolution1 = Activation(LeakyReLU(alpha=.2))(convolution1)
 
     convolution2 = Conv2D(64, (4, 4), strides=(2, 2))(input)
-    convolution2 = BatchNormalization()(convolution1)
-    convolution2 = Activation(LeakyReLU(alpha=.2))(convolution1)
+    convolution2 = Activation(LeakyReLU(alpha=.2))(convolution2)
 
     convolution3 = Conv2D(64, (4, 4), strides=(2, 2))(input)
     convolution3 = BatchNormalization()(convolution1)
@@ -184,6 +137,15 @@ def discriminator():
 
     finalOutput = Flatten()(convolution4)
     finalOutput = Dense(1, activation='sigmoid')(finalOutput)
+
+
+def createfullmode(generator, discriminator):
+
+        inputs = Input((128, 128, 3))
+
+        # Acquire the generator
+        generator_model = generator(inputs)
+
 
 
 
