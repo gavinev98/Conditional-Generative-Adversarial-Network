@@ -112,7 +112,9 @@ def generator():
         conv7 = Activation("relu")(conv7)
 
         model = Model(inputs=[inputs], outputs=[conv7])
+        print(model.summary())
         return model
+
 
 
 def discriminator():
@@ -145,12 +147,21 @@ def createfullmode(generator, discriminator):
 
         # Acquire the generator
         generator_model = generator(inputs)
+        # Acquire the inputs for the discriminator
+        discriminator_model = discriminator(inputs)
+
+        # Setting the trainable to false
+        discriminator_model.trainable = False
+
+        
 
 
 
 
 
 
+if __name__ == "__main__":
+    generator()
 
 
 
