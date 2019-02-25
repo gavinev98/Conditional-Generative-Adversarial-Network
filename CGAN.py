@@ -143,6 +143,7 @@ def discriminator():
 
 def createfullmode(generator, discriminator):
 
+        # Setting the inputs
         inputs = Input((128, 128, 3))
 
         # Acquire the generator
@@ -150,10 +151,24 @@ def createfullmode(generator, discriminator):
         # Acquire the inputs for the discriminator
         discriminator_model = discriminator(inputs)
 
-        # Setting the trainable to false
+        # Setting the trainable to false for discriminator.
         discriminator_model.trainable = False
 
-        
+        # Acquiring the output produced by the discriminator (probability)
+        output_gan = discriminator_model(generator_model)
+
+        # create the model
+        # input is the noise and output is the probability of real or fake.
+        ganfinal_Model = Model(inputs=inputs, outputs=output_gan)
+
+        return ganfinal_Model
+
+
+
+
+
+
+
 
 
 
