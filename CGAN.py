@@ -123,33 +123,34 @@ def discriminator():
     image_input = (128, 128)
     input = Input(image_input, 3)
 
+    # Layer 1
     convolution1 = Conv2D(64, (4, 4), strides=(2, 2))(input)
     convolution1 = Activation(LeakyReLU(alpha=.2))(convolution1)
-
+    # Layer 2
     convolution2 = Conv2D(64, (4, 4), strides=(2, 2))(input)
     convolution2 = Activation(LeakyReLU(alpha=.2))(convolution2)
-
+    # Layer 3
     convolution3 = Conv2D(64, (4, 4), strides=(2, 2))(input)
     convolution3 = BatchNormalization()(convolution1)
     convolution3 = Activation(LeakyReLU(alpha=.2))(convolution1)
-
+    # Layer 4
     convolution4 = Conv2D(64, (4, 4), strides=(2, 2))(input)
     convolution4 = BatchNormalization()(convolution1)
     convolution4 = Activation(LeakyReLU(alpha=.2))(convolution1)
-
+    # Output Layer / flatten and sigmoid activation used.
     finalOutput = Flatten()(convolution4)
     finalOutput = Dense(1, activation='sigmoid')(finalOutput)
 
 
-def createfullmode(generator, discriminator):
+def createfullmodel(generator_input, discriminator_input):
 
         # Setting the inputs
         inputs = Input((128, 128, 3))
 
         # Acquire the generator
-        generator_model = generator(inputs)
+        generator_model = generator_input(inputs)
         # Acquire the inputs for the discriminator
-        discriminator_model = discriminator(inputs)
+        discriminator_model = discriminator_input(inputs)
 
         # Setting the trainable to false for discriminator.
         discriminator_model.trainable = False
@@ -162,6 +163,21 @@ def createfullmode(generator, discriminator):
         ganfinal_Model = Model(inputs=inputs, outputs=output_gan)
 
         return ganfinal_Model
+
+def training_loop():
+
+        # Defining number of epochs
+            num_of_epochs=128
+        # Defining batch size.
+            batch_size=128
+
+
+        # Acquire the training data
+
+
+def loss_functions():
+
+
 
 
 
