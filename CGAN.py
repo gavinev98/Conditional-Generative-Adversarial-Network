@@ -22,6 +22,11 @@ listSketches = os.listdir(sketches_path)
 images_arr = []
 sketch = []
 
+# Defining number of epochs
+num_of_epochs = 128
+# Defining batch size.
+batch_size = 128
+
 # Loop of the directory of images and store each in array.
 for photos in glob.glob(photo_path + '\\*'):
 
@@ -166,10 +171,14 @@ def createfullmodel(generator_input, discriminator_input):
 
 def training_loop():
 
-        # Defining number of epochs
-            num_of_epochs=128
-        # Defining batch size.
-            batch_size=128
+        # defining the looping structure
+        # Looping over with number of epochs currently set to 128.
+    for epoch in range(num_of_epochs):
+
+        #  Defining a batch from the sketches and a batch from the real data.
+            for batch in range(sketch.shape[0]//batch_size):
+                
+
 
 
         # Acquire the training data
