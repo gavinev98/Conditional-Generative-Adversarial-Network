@@ -61,6 +61,7 @@ for sketches in glob.glob(sketches_path + '\\*'):
         meanOfSketch = np.mean(sketch)
         stdOfSketch = np.std(sketch)
 
+        # Rescaling images between -1 to 1.
         sketch = (sketch.astype(np.float32) - 127.5) / 127.5
 
 
@@ -171,12 +172,34 @@ def createfullmodel(generator_input, discriminator_input):
 
 def training_loop():
 
+
         # defining the looping structure
         # Looping over with number of epochs currently set to 128.
     for epoch in range(num_of_epochs):
 
+        # Splitting training data into batches of 128 as specified.
+        batch_count = sketch.shape[0] // batch_size
+
         #  Defining a batch from the sketches and a batch from the real data.
-            for batch in range(sketch.shape[0]//batch_size):
+        for batch in range(batch_count):
+
+            # Acquiring the generator network.
+            generator_input = generator()
+
+            # Get a batch of size 128 from the sketches from generator.
+            sketch_x = sketch[batch * batch_size:(batch + 1)*[batch_size]]
+
+            # Generate fake images using prediction
+            generate_images = generator_input.predict(sketch_x, verbose=1);
+
+            
+
+
+
+
+
+
+
                 
 
 
