@@ -185,11 +185,11 @@ def mean_squared_error(y_true, y_pred):
     return 10 * K.mean(K.square(y_pred - y_true), axis=-1)
 
 # https://keras.io/losses/
-def discriminator_probability(y_true, y_pred):
+def d_prob(y_true, y_pred):
     return K.mean(K.binary_crossentropy(K.flatten(y_pred), K.ones_like(K.flatten(y_pred))), axis=-1)
 
 # https://keras.io/losses/
-def discriminator_loss(y_true,y_pred):
+def d_loss(y_true,y_pred):
     batch_size = 25
     return K.mean(K.binary_crossentropy(K.flatten(y_pred), K.concatenate([K.ones_like(K.flatten(y_pred[:batch_size])),
                                                                           K.zeros_like(K.flatten(y_pred[:batch_size]))])
@@ -205,35 +205,32 @@ createModel = createfullmodel(generator_input, discriminator_input)
 # pass optimizer by name: default parameters will be used
 generator_input.compile(loss=mean_squared_error, optimizer=adam_Opt)
 # pass optimizer by name: default parameters will be used
-discriminator_input.compile(loss=discriminator_loss, optimizer=adam_Opt)
+discriminator_input.compile(loss=d_loss, optimizer=adam_Opt)
 # pass optimizer by name: default parameters will be used
-createModel.compile(loss=[mean_squared_error, discriminator_probability], optimizer=adam_Opt)
+createModel.compile(loss=[mean_squared_error, d_prob], optimizer=adam_Opt)
 discriminator_input.trainable = True
 
 
 
 
-def training_loop():
+
 
     # defining the looping structure
-        # Looping over with number of epochs currently set to 128.
-    for epoch in range(num_of_epochs):
+        # Looping over with number of epochs currently set to 25.
+for epoch in range(num_of_epochs):
 
+        #  Defining a batch from the sketches and a batch from the real data.
         # Splitting training data into batches of 128 as specified.
         batch_count = sketch.shape[0] // batch_size
 
         #  Defining a batch from the sketches and a batch from the real data.
-        for batch in range(batch_count):
-
-            # Acquiring the generator network.
-            generator_input = generator()
-
-            # Get a batch of size 128 from the sketches from generator.
-            sketch_x = sketch[batch * batch_size:(batch + 1)*[batch_size]]
-
-            # Generate fake images using prediction
-            generate_images = generator_input.predict(sketch_x, verbose=1);
-
+        for batch in range(sketch.shape[0] // batch_size):
+            # Get batch of images from sketch folder.
+            sketch_batch = sketch[batch * batch_size:(batch + 1) * batch_size]
+            # Get batch of image from photos folder.
+            image_batch = images_arr[batch * batch_size:(batch + 1) * batch_size]
+            # Pass in batch to generator and predict.
+            generated_images = generator_input.predict(sketch_batch, verbose=0)
             
 
 
