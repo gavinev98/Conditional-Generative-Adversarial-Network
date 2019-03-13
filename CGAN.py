@@ -141,9 +141,14 @@ def discriminator():
     convolution4 = BatchNormalization()(convolution1)
     convolution4 = Activation(LeakyReLU(alpha=.2))(convolution1)
     # Output Layer / flatten and sigmoid activation used.
+
     finalOutput = Flatten()(convolution4)
     finalOutput = Dense(1, activation='sigmoid')(finalOutput)
 
+    #create model
+    model = Model(inputs=[input], outputs=[finalOutput])
+
+    return model;
 
 def createfullmodel(generator_input, discriminator_input):
 
