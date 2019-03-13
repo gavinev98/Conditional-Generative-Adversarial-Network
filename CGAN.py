@@ -9,6 +9,7 @@ from keras.optimizers import RMSprop
 from keras.preprocessing import image
 from keras import backend as K
 import numpy as np
+import matplotlib.pyplot as plt
 import os
 from PIL import Image
 import glob
@@ -25,7 +26,7 @@ images_arr = []
 sketch = []
 
 # Defining number of epochs
-num_of_epochs = 25
+num_of_epochs = 700
 # Defining batch size.
 batch_size = 25
 
@@ -59,10 +60,11 @@ images_arr = (images_arr.astype(np.float32) - 128) / 128
 for i in range(len(listSketches)):
 
         #Get Image
-        store_Sketch = listSketches[i];
-
+        store_Sketch = listSketches[i]
 
         image_2 = image.load_img(store_Sketch, target_size=(128,128,3))
+
+        image_2 = image.img_to_array(image_2)
 
         sketch.append(image_2)
 
@@ -132,11 +134,10 @@ def generator():
 def discriminator():
 
     # Discriminator to also take same input structure.
-    image_input = (128, 128)
-    input = Input(image_input, 3)
+    inputs = Input((128, 128, 3))
 
     # Layer 1
-    convolution1 = Conv2D(64, (4, 4), strides=(2, 2))(input)
+    convolution1 = Conv2D(64, (4, 4), strides=(2, 2))(inputs)
     convolution1 = Activation(LeakyReLU(alpha=.2))(convolution1)
     # Layer 2
     convolution2 = Conv2D(64, (4, 4), strides=(2, 2))(convolution1)
@@ -155,7 +156,7 @@ def discriminator():
     finalOutput = Dense(1, activation='sigmoid')(finalOutput)
 
     #create model
-    model = Model(inputs=[input], outputs=[finalOutput])
+    model = Model(inputs=[inputs], outputs=[finalOutput])
 
     return model;
 
@@ -210,15 +211,10 @@ discriminator_input.compile(loss=d_loss, optimizer=adam_Opt)
 createModel.compile(loss=[mean_squared_error, d_prob], optimizer=adam_Opt)
 discriminator_input.trainable = True
 
-
-
-
-
-
-    # defining the looping structure
-        # Looping over with number of epochs currently set to 25.
+# defining the looping structure
+# Looping over with number of epochs currently set to 25.
 for epoch in range(num_of_epochs):
-
+    if epoch >= 0:
         #  Defining a batch from the sketches and a batch from the real data.
         # Splitting training data into batches of 128 as specified.
         batch_count = sketch.shape[0] // batch_size
@@ -237,41 +233,19 @@ for epoch in range(num_of_epochs):
             discrim_1 = [1] * batch_size + [0] * batch_size
             # Feed the discriminator both the real data and fake data.
             discriminator_2 = np.concatenate((image_batch, generated_images), axis=0)
-      
+
             discrim_1 = np.array(discrim_1)
-            
 
+            # https://keras.io/models/model/
+            d_loss = discriminator_input.train_on_batch(discriminator_2, discrim_1)
+            discriminator_input.trainable = False
 
+            # https://keras.io/models/model/
+            firstBatch = discrim_1[:batch_size]
+            g_loss = createModel.train_on_batch(sketch_batch, [image_batch, firstBatch])
 
-
-
-
-
-                
-
-
-
-        # Acquire the training data
-
-
-def loss_functions():
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if __name__ == "__main__":
-    generator()
+            discriminator_input.trainable = True
+            print("\tBatches %d GeneratorLoss: %f,%f  DiscriminatorLoss: %f " % (batch, g_loss[0], g_loss[1], d_loss))
 
 
 
