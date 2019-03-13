@@ -156,7 +156,7 @@ def createfullmodel(generator_input, discriminator_input):
         # Setting the inputs
         inputs = Input((128, 128, 3))
 
-        # Acquire the generator
+        # Acquire the generatorgb
         generator_model = generator_input(inputs)
 
         # Setting the trainable to false for discriminator.
@@ -179,6 +179,13 @@ def mean_squared_error(y_true, y_pred):
 # https://keras.io/losses/
 def discriminator_probability(y_true, y_pred):
     return K.mean(K.binary_crossentropy(K.flatten(y_pred), K.ones_like(K.flatten(y_pred))), axis=-1)
+
+# https://keras.io/losses/
+def discriminator_loss(y_true,y_pred):
+    batch_size = 25
+    return K.mean(K.binary_crossentropy(K.flatten(y_pred), K.concatenate([K.ones_like(K.flatten(y_pred[:batch_size])),
+                                                                          K.zeros_like(K.flatten(y_pred[:batch_size]))])
+                                        ), axis=-1)
 
 
 def training_loop():
