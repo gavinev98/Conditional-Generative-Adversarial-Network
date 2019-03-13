@@ -6,6 +6,7 @@ from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Model
 from keras.preprocessing import image
+from keras import backend as K
 import numpy as np
 import os
 from PIL import Image
@@ -170,10 +171,15 @@ def createfullmodel(generator_input, discriminator_input):
 
         return ganfinal_Model
 
+
+# https://keras.io/losses/
+def mean_squared_error(y_true, y_pred):
+    return 10 * K.mean(K.square(y_pred - y_true), axis=-1)
+
+
 def training_loop():
 
-
-        # defining the looping structure
+    # defining the looping structure
         # Looping over with number of epochs currently set to 128.
     for epoch in range(num_of_epochs):
 
