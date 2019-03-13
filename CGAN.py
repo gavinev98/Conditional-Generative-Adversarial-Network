@@ -176,6 +176,10 @@ def createfullmodel(generator_input, discriminator_input):
 def mean_squared_error(y_true, y_pred):
     return 10 * K.mean(K.square(y_pred - y_true), axis=-1)
 
+# https://keras.io/losses/
+def discriminator_probability(y_true, y_pred):
+    return K.mean(K.binary_crossentropy(K.flatten(y_pred), K.ones_like(K.flatten(y_pred))), axis=-1)
+
 
 def training_loop():
 
