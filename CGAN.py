@@ -5,6 +5,7 @@ from keras.layers import Conv2D, Conv2DTranspose
 from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Model
+from keras.optimizers import RMSprop
 from keras.preprocessing import image
 from keras import backend as K
 import numpy as np
@@ -27,6 +28,13 @@ sketch = []
 num_of_epochs = 25
 # Defining batch size.
 batch_size = 25
+
+
+# RMSProp Gradient Descent. // default setting.
+optimizer = RMSprop(lr=0.9)
+# Adam Optimizer default setting.
+adam_Opt = keras.optimizers.Adam(lr=0.005, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=0.0)
+
 
 # Loop of the directory of images and store each in array.
 for i in range(len(listPhotos)):
@@ -156,7 +164,7 @@ def createfullmodel(generator_input, discriminator_input):
         # Setting the inputs
         inputs = Input((128, 128, 3))
 
-        # Acquire the generatorgb
+        # Acquire the generator
         generator_model = generator_input(inputs)
 
         # Setting the trainable to false for discriminator.
@@ -186,6 +194,23 @@ def discriminator_loss(y_true,y_pred):
     return K.mean(K.binary_crossentropy(K.flatten(y_pred), K.concatenate([K.ones_like(K.flatten(y_pred[:batch_size])),
                                                                           K.zeros_like(K.flatten(y_pred[:batch_size]))])
                                         ), axis=-1)
+
+generator_input = generator()
+discriminator_input = discriminator()
+createModel = createfullmodel(generator_input, discriminator_input)
+
+
+#
+# https://keras.io/optimizers/
+# pass optimizer by name: default parameters will be used
+generator_input.compile(loss=mean_squared_error, optimizer=adam_Opt)
+# pass optimizer by name: default parameters will be used
+discriminator_input.compile(loss=discriminator_loss, optimizer=adam_Opt)
+# pass optimizer by name: default parameters will be used
+createModel.compile(loss=[mean_squared_error, discriminator_probability], optimizer=adam_Opt)
+discriminator_input.trainable = True
+
+
 
 
 def training_loop():
