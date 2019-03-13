@@ -130,16 +130,16 @@ def discriminator():
     convolution1 = Conv2D(64, (4, 4), strides=(2, 2))(input)
     convolution1 = Activation(LeakyReLU(alpha=.2))(convolution1)
     # Layer 2
-    convolution2 = Conv2D(64, (4, 4), strides=(2, 2))(input)
+    convolution2 = Conv2D(64, (4, 4), strides=(2, 2))(convolution1)
     convolution2 = Activation(LeakyReLU(alpha=.2))(convolution2)
     # Layer 3
-    convolution3 = Conv2D(64, (4, 4), strides=(2, 2))(input)
-    convolution3 = BatchNormalization()(convolution1)
-    convolution3 = Activation(LeakyReLU(alpha=.2))(convolution1)
+    convolution3 = Conv2D(64, (4, 4), strides=(2, 2))(convolution2)
+    convolution3 = BatchNormalization()(convolution3)
+    convolution3 = Activation(LeakyReLU(alpha=.2))(convolution3)
     # Layer 4
-    convolution4 = Conv2D(64, (4, 4), strides=(2, 2))(input)
-    convolution4 = BatchNormalization()(convolution1)
-    convolution4 = Activation(LeakyReLU(alpha=.2))(convolution1)
+    convolution4 = Conv2D(64, (4, 4), strides=(2, 2))(convolution3)
+    convolution4 = BatchNormalization()(convolution4)
+    convolution4 = Activation(LeakyReLU(alpha=.2))(convolution4)
     # Output Layer / flatten and sigmoid activation used.
 
     finalOutput = Flatten()(convolution4)
@@ -151,24 +151,22 @@ def discriminator():
     return model;
 
 def createfullmodel(generator_input, discriminator_input):
-
+    # https: // www.datacamp.com / community / tutorials / generative - adversarial - networks
         # Setting the inputs
         inputs = Input((128, 128, 3))
 
         # Acquire the generator
         generator_model = generator_input(inputs)
-        # Acquire the inputs for the discriminator
-        discriminator_model = discriminator_input(inputs)
 
         # Setting the trainable to false for discriminator.
-        discriminator_model.trainable = False
+        discriminator_input.trainable = False
 
-        # Acquiring the output produced by the discriminator (probability)
-        output_gan = discriminator_model(generator_model)
+        # Acquire the inputs for the discriminator
+        discriminator_model = discriminator_input(generator_model)
 
         # create the model
         # input is the noise and output is the probability of real or fake.
-        ganfinal_Model = Model(inputs=inputs, outputs=output_gan)
+        ganfinal_Model = Model(inputs=inputs, outputs=[generator_model, discriminator_model])
 
         return ganfinal_Model
 
