@@ -39,38 +39,30 @@ for i in range(len(listPhotos)):
 
         images_arr.append(image_1)
 
-        images_arr = np.array(images_arr)
+images_arr = np.array(images_arr)
 
-        images_arr = images_arr.astype('float32')
+images_arr = images_arr.astype('float32')
 
-        # acquire the mean
-        meanOfImage = np.mean(images_arr)
-        stdOfImage = np.std(images_arr)
-
-        images_arr = (images_arr.astype(np.float32) - 128) / 128
+images_arr = (images_arr.astype(np.float32) - 128) / 128
 
 
 # Loop over directory of sketches and store each in array.
 for i in range(len(listSketches)):
 
-
-        tempImage2 = image.img_to_array(im)
-
-        sketch.append(tempImage2)
-
-        sketch = np.array(sketch)
-
-        sketch = sketch.astype('float32')
-
-        # acquire the mean
-        meanOfSketch = np.mean(sketch)
-        stdOfSketch = np.std(sketch)
-
-        # Rescaling images between -1 to 1.
-        sketch = (sketch.astype(np.float32) - 127.5) / 127.5
+        #Get Image
+        store_Sketch = listSketches[i];
 
 
-        print(sketch)
+        image_2 = image.load_img(store_Sketch, target_size=(128,128,3))
+
+        sketch.append(image_2)
+
+sketch = np.array(sketch)
+
+sketch = sketch.astype('float32')
+
+# Rescaling images between -1 to 1.
+sketch = (sketch.astype(np.float32) - 128) / 128
 
 
 def generator():
