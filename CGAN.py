@@ -11,28 +11,33 @@ import os
 from PIL import Image
 import glob
 
-photo_path = "/Users/Gavin Everett/Desktop/GavinsCGANFYP/FullyFormattedPhotos"
-sketches_path = "/Users/Gavin Everett/Desktop/GavinsCGANFYP/FullyFormattedSketch"
+photo_path = "/Users/Gavin Everett/Desktop/GavinsCGANFYP/photo/"
+sketches_path = "/Users/Gavin Everett/Desktop/GavinsCGANFYP/sketch/"
 
 
-listPhotos = os.listdir(photo_path)
-listSketches = os.listdir(sketches_path)
+listPhotos = [photo_path + i for i in os.listdir(photo_path)]
+listSketches = [sketches_path + i for i in os.listdir(sketches_path)]
 
 # Creating arrays to hold reformatted names for images
 images_arr = []
 sketch = []
 
 # Defining number of epochs
-num_of_epochs = 128
+num_of_epochs = 25
 # Defining batch size.
-batch_size = 128
+batch_size = 25
 
 # Loop of the directory of images and store each in array.
-for photos in glob.glob(photo_path + '\\*'):
+for i in range(len(listPhotos)):
 
-        im = Image.open(photos)
-        tempImage1 = image.img_to_array(im)
-        images_arr.append(tempImage1)
+        #Get Image
+        store_Images = listPhotos[i];
+
+        image_1 = image.load_img(store_Images, target_size=(128,128,3))
+
+        image_1 = image.img_to_array(image_1)
+
+        images_arr.append(image_1)
 
         images_arr = np.array(images_arr)
 
@@ -42,13 +47,13 @@ for photos in glob.glob(photo_path + '\\*'):
         meanOfImage = np.mean(images_arr)
         stdOfImage = np.std(images_arr)
 
-        images_arr = (images_arr.astype(np.float32) - 127.5) / 127.5
+        images_arr = (images_arr.astype(np.float32) - 128) / 128
 
 
 # Loop over directory of sketches and store each in array.
-for sketches in glob.glob(sketches_path + '\\*'):
+for i in range(len(listSketches)):
 
-        im = Image.open(sketches)
+
         tempImage2 = image.img_to_array(im)
 
         sketch.append(tempImage2)
