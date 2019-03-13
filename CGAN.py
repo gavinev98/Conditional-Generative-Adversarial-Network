@@ -231,6 +231,14 @@ for epoch in range(num_of_epochs):
             image_batch = images_arr[batch * batch_size:(batch + 1) * batch_size]
             # Pass in batch to generator and predict.
             generated_images = generator_input.predict(sketch_batch, verbose=0)
+
+
+            # Get sample of real data.
+            discrim_1 = [1] * batch_size + [0] * batch_size
+            # Feed the discriminator both the real data and fake data.
+            discriminator_2 = np.concatenate((image_batch, generated_images), axis=0)
+      
+            discrim_1 = np.array(discrim_1)
             
 
 
